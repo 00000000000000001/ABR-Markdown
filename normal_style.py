@@ -1,5 +1,4 @@
 import config
-from docx.shared import Pt
 
 def apply(doc):
     # apply standard style

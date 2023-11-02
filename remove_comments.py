@@ -1,8 +1,8 @@
 import re
-import alphabet
+import config
 
 def removeComment(line):
-    return re.subn(alphabet.RE_COMMENT, "", line)
+    return re.subn(config.RE_COMMENT, "", line)
 
 def run(document):
     for paragraph in document.paragraphs:
