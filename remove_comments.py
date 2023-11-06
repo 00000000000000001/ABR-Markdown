@@ -10,7 +10,8 @@ def run(document):
         consume = False
         for j in range(len(paragraph.text.splitlines())):
             tupel = removeComment(paragraph.text.splitlines()[j])
-            if (tupel[1] == 1 and tupel[0] == ""):
+            print(tupel)
+            if (tupel[1] >= 1 and tupel[0] == ""):
                 consume = True
                 continue
             elif (consume and paragraph.text.splitlines()[j] == ""):

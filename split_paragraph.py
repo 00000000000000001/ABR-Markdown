@@ -15,6 +15,7 @@ def split_paragraph(p, document):
                 document.styles["Normal"],
             )
             p.text = docx_utils.concate(text.splitlines()[0:j])
+            # p.add_run('TEST').bold = True
             break
 
 

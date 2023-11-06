@@ -2,10 +2,6 @@ import re
 import docx_utils
 import config
 
-# def add_paragraph_after_list(p):
-#     if re.match(r"(\*\*(.*)\n?)+", p.text):
-#         docx_utils.insert_paragraph_after(p, "")
-
 def insert_bullet_list(p):
     i = 0
     while i < len(p.text.splitlines()):
@@ -27,12 +23,6 @@ def insert_bullet_list(p):
         i += 1
 
 def run(document):
-    # j = 0
-    # while j < len(document.paragraphs):
-    #     p = document.paragraphs[j]
-    #     add_paragraph_after_list(p)
-    #     j += 1
-
     j = 0
     while j < len(document.paragraphs):
         p = document.paragraphs[j]
