@@ -10,6 +10,7 @@ briefe = glob.glob(file_input + "*.docx")
 
 msg = ""
 for brief in briefe:  # contains hash accounting and file conversion
+    # print(brief)
     try:
         file = utils.open_file(brief)
         hash = utils.get_hash(file)

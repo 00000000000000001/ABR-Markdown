@@ -6,17 +6,31 @@ def removeComment(line):
 
 def run(document):
     for paragraph in document.paragraphs:
-        editedText = ''
-        consume = False
-        for j in range(len(paragraph.text.splitlines())):
-            tupel = removeComment(paragraph.text.splitlines()[j])
-            print(tupel)
-            if (tupel[1] >= 1 and tupel[0] == ""):
-                consume = True
+        for run in paragraph.runs:
+            if run.text == "\n":
                 continue
-            elif (consume and paragraph.text.splitlines()[j] == ""):
-                continue
+
+            # remember font style
+            bold = run.font.bold
+            italic = run.font.italic
+            underline = run.font.underline
+
+            editedText = ''
             consume = False
-            line = tupel[0]
-            editedText += line + '\n'
-        paragraph.text = editedText[:-1]
+            for j in range(len(run.text.splitlines())):
+                tupel = removeComment(run.text.splitlines()[j])
+                if (tupel[1] >= 1 and tupel[0] == ""):
+                    consume = True
+                    continue
+                elif (consume and run.text.splitlines()[j] == ""):
+                    continue
+                consume = False
+                # line = tupel[0]
+                line = run.text.splitlines()[j]
+                editedText += line + '\n'
+            run.text = editedText[:-1]
+
+            # adopt font style
+            run.font.bold = bold
+            run.font.italic = italic
+            run.font.underline = underline

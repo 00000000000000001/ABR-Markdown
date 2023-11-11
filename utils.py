@@ -29,8 +29,8 @@ def convert_file(file):
     # open file
     doc = docx.Document(file.name)
     # apply standard style
-    normal_style.apply(doc)
-    # convert
+    # normal_style.apply(doc)
+    # # convert
     remove_comments.run(doc)
     split_paragraph.run(doc)
     create_bullet_lists.run(doc)
