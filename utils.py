@@ -1,7 +1,7 @@
 import hashlib
 import config
 import docx
-import normal_style
+import normal_paragraph_style
 import remove_comments
 import split_paragraph
 import create_bullet_lists
@@ -29,7 +29,7 @@ def convert_file(file):
     # open file
     doc = docx.Document(file.name)
     # apply standard style
-    normal_style.apply(doc)
+    # normal_paragraph_style.apply(doc)
     # # convert
     remove_comments.run(doc)
     split_paragraph.run(doc)
