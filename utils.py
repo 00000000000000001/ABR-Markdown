@@ -7,6 +7,12 @@ import split_paragraph
 import create_bullet_lists
 import sqlite3
 
+# def delete_paragraph(paragraph):
+#     p = paragraph._element
+#     if p.getparent() is not None:
+#         p.getparent().remove(p)
+#         p._p = p._element = None
+
 def open_file(filename):
     return open(filename, "rb")
 
@@ -25,6 +31,12 @@ def is_registered(hash):
     con.close()
     return is_registered
 
+def getText(doc):
+    fullText = []
+    for para in doc.paragraphs:
+        fullText.append(para.text)
+    return '\n'.join(fullText)
+
 def convert_file(file):
     # open file
     doc = docx.Document(file.name)
@@ -35,6 +47,7 @@ def convert_file(file):
     split_paragraph.run(doc)
     create_bullet_lists.run(doc)
     # save
+    # print(getText(doc))
     doc.save(file.name)
     return open_file(file.name)
 
