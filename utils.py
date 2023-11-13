@@ -13,14 +13,17 @@ import sqlite3
 #         p.getparent().remove(p)
 #         p._p = p._element = None
 
+
 def open_file(filename):
     return open(filename, "rb")
+
 
 def get_hash(file):
     with file:
         bytes = file.read()
         hash = hashlib.md5(bytes).hexdigest()
     return hash
+
 
 def is_registered(hash):
     con = sqlite3.connect(config.SQLITE_FILE_NAME)
@@ -31,25 +34,28 @@ def is_registered(hash):
     con.close()
     return is_registered
 
+
 def getText(doc):
     fullText = []
     for para in doc.paragraphs:
         fullText.append(para.text)
-    return '\n'.join(fullText)
+    return "\n".join(fullText)
+
 
 def convert_file(file):
-    # open file
     doc = docx.Document(file.name)
-    # apply standard style
-    # normal_paragraph_style.apply(doc)
-    # # convert
-    remove_comments.run(doc)
-    split_paragraph.run(doc)
-    create_bullet_lists.run(doc)
-    # save
-    # print(getText(doc))
-    doc.save(file.name)
-    return open_file(file.name)
+    edited = (
+        remove_comments.run(doc)
+        | split_paragraph.run(doc)
+        | create_bullet_lists.run(doc)
+    )
+    if edited:
+        doc.save(file.name)
+        return open_file(file.name)
+        True
+    else:
+        return None
+
 
 def register_hash(hash):
     conn = sqlite3.connect(config.SQLITE_FILE_NAME)

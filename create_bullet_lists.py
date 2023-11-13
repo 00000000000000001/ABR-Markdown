@@ -1,6 +1,5 @@
-import re
 import docx_utils
-import config
+
 
 def copy_to_new_paragraph(p, text, run, style=None):
     new_p = docx_utils.insert_paragraph_after(p, "", style)
@@ -11,31 +10,70 @@ def copy_to_new_paragraph(p, text, run, style=None):
     runner.font.color.rgb = run.font.color.rgb
     runner.font.name = run.font.name
     runner.font.size = run.font.size
+    return new_p
+
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    if p.getparent() is not None:
+        p.getparent().remove(p)
+
+
+def parse_next(str):
+    arr = []
+    i = 0
+    new_line = True
+    star = False
+    while i < len(str):
+        if str[i] == "*" and star:
+            if str[i - 2] == "\n":
+                arr.append(str[: i - 2])
+            else:
+                arr.append(str[: i - 1])
+            i += 1
+            value = ""
+            while i < len(str) and str[i] != "\n":
+                value += str[i]
+                str = str[:i] + str[i + 1 :]
+            arr.append(value)
+            arr.append(str[i + 1 :])
+            return arr
+        elif new_line and str[i] == "*":
+            star = True
+            i += 1
+            continue
+        elif i < len(str) and str[i] == "\n":
+            new_line = True
+        else:
+            new_line = False
+        star = False
+        i += 1
+    return arr
+
 
 def insert_bullet_list(p):
+    edited = False
     for run in p.runs:
-        i = 0
-        while i < len(run.text.splitlines()):
-            line = run.text.splitlines()[i]
-            if re.match(r"^(\*\*)(.*)$", line):
-                if (
-                    docx_utils.concate(run.text.splitlines()[i + 1 :]) != ""
-                    or config.LEAVE_EMPTY_PARAGRAPH_AFTER_LIST
-                ):
-                    copy_to_new_paragraph(
-                        p, docx_utils.concate(run.text.splitlines()[i + 1 :]), run
-                    )
-                p.text = docx_utils.concate(p.text.splitlines()[:i])
-                value = re.split(r"^(\*\*)(.*)$", line)[2]
-                copy_to_new_paragraph(p, value, run, "List Bullet")
-            if p.text == "":
-                docx_utils.delete_paragraph(p)
-                break
-            i += 1
+        arr = parse_next(run.text)
+        if len(arr) == 3:
+            if arr[0] != "":
+                prev_p = copy_to_new_paragraph(p, arr[0], run)
+            else:
+                prev_p = p
+            list_p = copy_to_new_paragraph(prev_p, arr[1], run, "List Bullet")
+            if arr[2] != "":
+                copy_to_new_paragraph(list_p, arr[2], run)
+            delete_paragraph(p)
+            edited = True
+            return edited
+    return edited
+
 
 def run(document):
+    edited = False
     j = 0
     while j < len(document.paragraphs):
         p = document.paragraphs[j]
-        insert_bullet_list(p)
+        edited |= insert_bullet_list(p)
         j += 1
+    return edited
