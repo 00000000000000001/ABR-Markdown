@@ -52,7 +52,7 @@ def convert_file(file):
     if edited:
         doc.save(file.name)
         return open_file(file.name)
-        True
+        # True
     else:
         return None
 
