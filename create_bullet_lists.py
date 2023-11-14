@@ -1,17 +1,4 @@
-import docx_utils
-
-
-def copy_to_new_paragraph(p, text, run, style=None):
-    new_p = docx_utils.insert_paragraph_after(p, "", style)
-    runner = new_p.add_run(text)
-    runner.bold = run.bold
-    runner.italic = run.italic
-    runner.underline = run.underline
-    runner.font.color.rgb = run.font.color.rgb
-    runner.font.name = run.font.name
-    runner.font.size = run.font.size
-    return new_p
-
+import utils
 
 def delete_paragraph(paragraph):
     p = paragraph._element
@@ -57,12 +44,12 @@ def insert_bullet_list(p):
         arr = parse_next(run.text)
         if len(arr) == 3:
             if arr[0] != "":
-                prev_p = copy_to_new_paragraph(p, arr[0], run)
+                prev_p = utils.copy_to_new_paragraph(p, arr[0], run)
             else:
                 prev_p = p
-            list_p = copy_to_new_paragraph(prev_p, arr[1], run, "List Bullet")
+            list_p = utils.copy_to_new_paragraph(prev_p, arr[1], run, "List Bullet")
             if arr[2] != "":
-                copy_to_new_paragraph(list_p, arr[2], run)
+                utils.copy_to_new_paragraph(list_p, arr[2], run)
             delete_paragraph(p)
             edited = True
             return edited

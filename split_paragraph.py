@@ -1,16 +1,4 @@
-import docx_utils
-
-
-def split_paragraph(p, run, text):
-    new_p = docx_utils.insert_paragraph_after(p, "")
-    runner = new_p.add_run(text)
-    runner.bold = run.bold
-    runner.italic = run.italic
-    runner.underline = run.underline
-    runner.font.color.rgb = run.font.color.rgb
-    runner.font.name = run.font.name
-    runner.font.size = run.font.size
-
+import utils
 
 def process(p):
     edited = False
@@ -20,7 +8,7 @@ def process(p):
         while i < len(run.text):
             if run.text[i] == "\n":
                 if split == True:
-                    split_paragraph(p, run, run.text[i + 1 :])
+                    utils.copy_to_new_paragraph(p, run.text[i + 1 :], run)
                     run.text = run.text[: i - 1]
                     split = False
                     edited = True

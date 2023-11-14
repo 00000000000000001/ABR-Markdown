@@ -1,17 +1,13 @@
 import hashlib
 import config
 import docx
-import normal_paragraph_style
 import remove_comments
 import split_paragraph
 import create_bullet_lists
 import sqlite3
+from docx.text.paragraph import Paragraph
+from docx.oxml.shared import OxmlElement
 
-# def delete_paragraph(paragraph):
-#     p = paragraph._element
-#     if p.getparent() is not None:
-#         p.getparent().remove(p)
-#         p._p = p._element = None
 
 
 def open_file(filename):
@@ -63,3 +59,36 @@ def register_hash(hash):
     cur.execute(f"INSERT INTO hashes (hash) VALUES ('{hash}')")
     conn.commit()
     conn.close()
+
+def insert_paragraph_after(paragraph, text=None, style=None):
+    """Insert a new paragraph after the given paragraph."""
+    new_p = OxmlElement("w:p")
+    paragraph._p.addnext(new_p)
+    new_para = Paragraph(new_p, paragraph._parent)
+    if text:
+        new_para.add_run(text)
+    if style is not None:
+        new_para.style = style
+    return new_para
+
+def concate(arr):
+    res = ''
+    for line in arr:
+        res += line + '\n'
+    return res[:-1]
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    paragraph._p = paragraph._element = None
+
+def copy_to_new_paragraph(p, text, run, style=None):
+    new_p = insert_paragraph_after(p, "", style)
+    runner = new_p.add_run(text)
+    runner.bold = run.bold
+    runner.italic = run.italic
+    runner.underline = run.underline
+    runner.font.color.rgb = run.font.color.rgb
+    runner.font.name = run.font.name
+    runner.font.size = run.font.size
+    return new_p
