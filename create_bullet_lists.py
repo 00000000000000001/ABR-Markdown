@@ -2,6 +2,7 @@ import copy
 from docx.text.paragraph import Paragraph
 import re
 import utils
+import test
 
 # def insert_bullet_list(p):
 #     p_new = copy.deepcopy(p)
@@ -101,17 +102,19 @@ import utils
 #             p_last, bool = iterate_lines(run, p_last, p)
             # i += 1
 
-def run(document):
-    # j = 0
-    # while j < len(document.paragraphs):
-    #     iterate_runs(document.paragraphs[j])
-    #     j += 1
+# def run(document):
+#     # j = 0
+#     # while j < len(document.paragraphs):
+#     #     iterate_runs(document.paragraphs[j])
+#     #     j += 1
 
-    p = document.paragraphs[0]
+#     p = document.paragraphs[0]
 
     
 
-    exit()
-    # return True
+#     exit()
+#     # return True
 
-bool = False
+def run(document):
+    test.bullet(document)
+    return True

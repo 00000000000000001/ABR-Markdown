@@ -10,7 +10,7 @@ briefe = glob.glob(file_input + "*.docx")
 
 msg = ""
 for brief in briefe:  # contains hash accounting and file conversion
-    # try:
+    try:
         file = utils.open_file(brief)
         hash = utils.get_hash(file)
         if utils.is_registered(hash):
@@ -27,9 +27,9 @@ for brief in briefe:  # contains hash accounting and file conversion
             file_converted.close()
             msg += "✅" + re.split(r"(.*)/((.+).docx)", brief)[2] + "\n"
 
-    # except Exception as error:
-    #     print("An exception occurred:", error)
-    #     continue
+    except Exception as error:
+        print("An exception occurred:", error)
+        continue
     
 
 # if msg == "":

@@ -78,6 +78,8 @@ p_dest = document.add_paragraph("")
 
 
 def cp(m, n, p_src, p_dest):
+    if m < 0 or n > len(p_src.text):
+        return None
     r_start = in_which_run_is(m, p_src)
     r_finish = in_which_run_is(n, p_src)
 

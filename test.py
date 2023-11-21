@@ -1,203 +1,113 @@
 from docx import Document
+from docx_tools import cp, rm, mv
+import utils
 import copy
-
-document = Document()
-
-p_src = document.add_paragraph("")
-
-p_src.add_run("abc").bold = True
-p_src.add_run("defg").underline = True
-p_src.add_run("hijkl").italic = True
-
-####
+from docx.text.paragraph import Paragraph
+from docx.oxml.shared import OxmlElement
 
 
-def in_which_run_is(m, p):
-    if m < 0 or m > len(p.text) - 1:
-        return None
-    i = 0
-    sum = 0
-    for run in p.runs:
-        sum += len(run.text)
-        if sum - 1 >= m:
-            return i
+# document = Document()
+
+# p = document.add_paragraph("")
+
+# p.add_run("Befunde:\n").underline = True
+# p.add_run("**BEF1\n**BEF2\n")
+# p.add_run("Procedere:\n").underline = True
+# p.add_run("**PROC1\n**PROC2")
+
+def insert_paragraph_after(paragraph, text=None, style=None):
+    """Insert a new paragraph after the given paragraph."""
+    new_p = OxmlElement("w:p")
+    paragraph._p.addnext(new_p)
+    new_para = Paragraph(new_p, paragraph._parent)
+    if text:
+        new_para.add_run(text)
+    if style is not None:
+        new_para.style = style
+    return new_para
+
+
+def do_stuff(n, p):
+    line = ""
+    i = n - 1
+    while i < len(p.text) and p.text[i] != "\n":
+        line += p.text[i]
         i += 1
-    return None
-
-
-assert in_which_run_is(0, p_src) == 0
-assert in_which_run_is(1, p_src) == 0
-assert in_which_run_is(2, p_src) == 0
-
-assert in_which_run_is(3, p_src) == 1
-assert in_which_run_is(4, p_src) == 1
-assert in_which_run_is(5, p_src) == 1
-assert in_which_run_is(6, p_src) == 1
-
-assert in_which_run_is(7, p_src) == 2
-assert in_which_run_is(8, p_src) == 2
-assert in_which_run_is(9, p_src) == 2
-assert in_which_run_is(10, p_src) == 2
-assert in_which_run_is(11, p_src) == 2
-
-assert in_which_run_is(12, p_src) == None
-assert in_which_run_is(-1, p_src) == None
-
-
-def at_which_position_in_its_run_is(m, p):
-    if m < 0 or m > len(p.text) - 1:
-        return None
-    if m < len(p.runs[0].text):
-        return m
-    sum = 0
-    i = 0
-    while sum - 1 < m:
-        sum += len(p.runs[i].text)
-        i += 1
-    k = (sum - 1) - m
-    return len(p.runs[i - 1].text) - 1 - k
-
-
-assert at_which_position_in_its_run_is(0, p_src) == 0
-assert at_which_position_in_its_run_is(1, p_src) == 1
-assert at_which_position_in_its_run_is(2, p_src) == 2
-
-assert at_which_position_in_its_run_is(3, p_src) == 0
-assert at_which_position_in_its_run_is(4, p_src) == 1
-assert at_which_position_in_its_run_is(5, p_src) == 2
-assert at_which_position_in_its_run_is(6, p_src) == 3
-
-assert at_which_position_in_its_run_is(7, p_src) == 0
-assert at_which_position_in_its_run_is(8, p_src) == 1
-assert at_which_position_in_its_run_is(9, p_src) == 2
-assert at_which_position_in_its_run_is(10, p_src) == 3
-assert at_which_position_in_its_run_is(11, p_src) == 4
-
-assert at_which_position_in_its_run_is(12, p_src) == None
-assert at_which_position_in_its_run_is(-1, p_src) == None
-
-p_dest = document.add_paragraph("")
-
-
-def cp(m, n, p_src, p_dest):
-    r_start = in_which_run_is(m, p_src)
-    r_finish = in_which_run_is(n, p_src)
-
-    for i in range(r_start, r_finish + 1):
-        run = p_src.runs[i]
-        r_copy = copy.deepcopy(run)._r
-
-        a = 0
-        o = len(run.text)
-        if i == r_start:
-            a = at_which_position_in_its_run_is(m, p_src)
-        if i == r_finish:
-            o = at_which_position_in_its_run_is(n, p_src) + 1
-
-        r_copy.text = r_copy.text[a:o]
-        p_dest._p.append(r_copy)
-
-
-# tests
-
-cp(5, 7, p_src, p_dest)
-assert p_dest.text == "fgh"
-p_dest._p.clear()
-
-cp(0, 0, p_src, p_dest)
-assert p_dest.text == "a"
-p_dest._p.clear()
-
-cp(0, 2, p_src, p_dest)
-assert p_dest.text == "abc"
-p_dest._p.clear()
-
-cp(0, 3, p_src, p_dest)
-assert p_dest.text == "abcd"
-p_dest._p.clear()
-
-cp(0, 11, p_src, p_dest)
-assert p_dest.text == "abcdefghijkl"
-p_dest._p.clear()
-
-cp(7, 11, p_src, p_dest)
-assert p_dest.text == "hijkl"
-p_dest._p.clear()
-
-cp(11, 11, p_src, p_dest)
-assert p_dest.text == "l"
-p_dest._p.clear()
-
-cp(0, 11, p_src, p_dest)
-
-
-def remove_run(run, p):
-    i = len(p.runs) - 1
-    while i >= 0:
-        if p.runs[i]._r == run._r:
-            p._p.remove(p.runs[i]._r)
-            return run
-        i -= 1
-    return None
-
-
-def rm(m, n, p):
-    if m < 0 or n > len(p.text) - 1:
-        return
-
-    r_start = in_which_run_is(m, p)
-    r_finish = in_which_run_is(n, p)
-
-    a = -1
-    o = -1
-    arr = []
-
-    for i in range(r_start, r_finish + 1):
-        run = p.runs[i]
-
-        if i == r_start:
-            a = at_which_position_in_its_run_is(m, p)
-        if i == r_finish:
-            o = at_which_position_in_its_run_is(n, p)
-        if i > r_start and i < r_finish:
-            arr.append(run)
-
-    if r_start == r_finish:
-        p.runs[r_start].text = p.runs[r_start].text[:a] + p.runs[r_finish].text[o + 1 :]
+    p_bullet = utils.insert_paragraph_after(p_last, "", "List Bullet")
+    mv(n - 1, i - 1, p, p_bullet)
+    if n == 0:
+        rm(n - 1, n - 2, p)
     else:
-        p.runs[r_start].text = p.runs[r_start].text[:a]
-        p.runs[r_finish].text = p.runs[r_finish].text[o + 1 :]
-    for run in reversed(arr):
-        remove_run(run, p)
+        rm(n - 2, n - 2, p)
+    print(line) 
+    n -= 1
+    return [n, p_bullet]
+
+def bullet(document):
+    l = 0
+    while l < len(document.paragraphs):
+        p = document.paragraphs[l]
+        p_last = p
+        is_new_line = True
+        could_be_a_list_item = False
+        moved = False
+        i = 0
+        while i < len(p.text):
+
+            if p.text[i] == "\n":
+                is_new_line = True
+                i += 1
+                continue
+
+            if is_new_line and p.text[i] == "*":
+                could_be_a_list_item = True
+                is_new_line = False
+                moved = False
+                i += 1
+                continue
+
+            if could_be_a_list_item and p.text[i] == "*":
+
+                if i > 1:
+                    rm(i-2, i, p)
+                    i -= 2
+                else:
+                    rm(i-1, i, p) 
+                    i -= 1
 
 
-rm(0, 0, p_dest)
-assert p_dest.text == "bcdefghijkl"
+                line = ""
+                k = i
+                while k < len(p.text) and p.text[k] != "\n":
+                    line += p.text[k]
+                    k += 1
 
-p_dest._p.clear()
-cp(0, 11, p_src, p_dest)
-rm(5, 7, p_dest)
-assert p_dest.text == "abcdeijkl"
+                print(line)
 
-p_dest._p.clear()
-cp(0, 11, p_src, p_dest)
-rm(0, 2, p_dest)
-assert p_dest.text == "defghijkl"
+                p_new = insert_paragraph_after(p_last, "", "List Bullet")
+                mv(i,k - 1,p,p_new)
+                p_last = p_new
+                moved = True
+                continue
 
-p_dest._p.clear()
-cp(0, 11, p_src, p_dest)
-rm(0, 11, p_dest)
-assert p_dest.text == ""
+            if moved and p.text[i] != "*":
+                p_new = copy.deepcopy(p)
+                p_new._p.clear()
+                p_last._p.addnext(p_new._p)
+                mv(i, len(p.text) - 1, p, p_new)
+                if p.text[len(p.text) - 1] == "\n":
+                    rm(len(p.text) - 1, len(p.text) - 1, p)
+                p_last = p_new
+                moved = False
+                i += 1
+                continue
 
-p_dest._p.clear()
-cp(0, 11, p_src, p_dest)
-rm(1, 1, p_dest)
-assert p_dest.text == "acdefghijkl"
-
-p_dest._p.clear()
-cp(0, 11, p_src, p_dest)
-rm(1, 12, p_dest)
-assert p_dest.text == "abcdefghijkl"
+            i += 1
+        if p.text == "":
+            utils.delete_paragraph(p)
+        l += 1
 
 
-document.save("test.docx")
+# bullet(document)
+
+# document.save("test.docx")
