@@ -41,8 +41,8 @@ def getText(doc):
 def convert_file(file):
     doc = docx.Document(file.name)
     edited = (
-        remove_comments.run(doc)
-        | split_paragraph.run(doc)
+        # remove_comments.run(doc)
+        split_paragraph.run(doc)
         | create_bullet_lists.run(doc)
     )
     if edited:
