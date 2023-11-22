@@ -41,8 +41,8 @@ def getText(doc):
 def convert_file(file):
     doc = docx.Document(file.name)
     edited = (
-        # remove_comments.run(doc)
-        split_paragraph.run(doc)
+        remove_comments.run(doc)
+        | split_paragraph.run(doc)
         | create_bullet_lists.run(doc)
     )
     if edited:
@@ -92,3 +92,39 @@ def copy_to_new_paragraph(p, text, run, style=None):
     runner.font.name = run.font.name
     runner.font.size = run.font.size
     return new_p
+
+# def remove_run(run, p):
+#     i = len(p.runs) - 1
+#     while i >= 0:
+#         if p.runs[i]._r == run._r:
+#             print(run._r)
+#             p._p.remove(p.runs[i]._r)
+#             return run
+#         i -= 1
+#     return None
+
+# def append_run(run, p):
+#     r_copy = copy.deepcopy(run)._r
+#     p._p.append(r_copy)
+
+# def add_bullet_item(p, run):
+#     p_new = utils.insert_paragraph_after(p, "", "List Bullet")
+#     r_new = copy.deepcopy(run)._r
+#     p_new._p.append(r_new)
+#     return p_new
+
+# def duplicate(p):
+#     p_new = copy.deepcopy(p)
+#     p._p.addnext(p_new._p)
+#     return p_new
+
+# def remove_runs_to_reverse(p, n):
+#     i = len(p.runs) - 1
+#     while i > n:
+#         p._p.remove(p.runs[i]._r)
+#         i -= 1
+
+# def remove_runs_to(p, n):
+#     i = 0
+#     for i in range(n):
+#         p._p.remove(p.runs[0]._r)

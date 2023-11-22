@@ -1,3 +1,5 @@
+from docx_tools import rm
+
 def getText(doc):
     fullText = []
     for para in doc.paragraphs:
@@ -7,18 +9,26 @@ def getText(doc):
 
 def run(document):
     edited = False
-    for paragraph in document.paragraphs:
-        for run in paragraph.runs:
-            i = 0
-            while i < len(run.text):
-                if run.text[i] == "{":
-                    while i < len(run.text) and run.text[i] != "}":
-                        run.text = run.text[:i] + run.text[i + 1 :]
-                    run.text = run.text[:i] + run.text[i + 1 :]
-                    if (i - 1 == -1 or run.text[i - 1] == "\n") and run.text[i] == "\n":
-                        while i < len(run.text) and run.text[i] == "\n":
-                            run.text = run.text[:i] + run.text[i + 1 :]
-                    edited = True
-                    i -= 1
-                i += 1
+    delete = False
+    consume = False
+    for p in document.paragraphs:
+        i = 0
+        while i < len(p.text):
+            if p.text[i] == "}":
+                rm(i,i,p)
+                delete = False
+                consume = True
+                continue
+            if delete:
+                rm(i,i,p)
+                continue
+            if p.text[i] == "{":
+                delete = True
+                edited = True
+                continue
+            if p.text[i] == "\n" and consume:
+                rm(i,i,p)
+                continue
+            consume = False
+            i += 1
     return edited

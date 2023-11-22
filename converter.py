@@ -30,9 +30,9 @@ for brief in briefe:  # contains hash accounting and file conversion
     except Exception as error:
         print("An exception occurred:", error)
         continue
-    
 
-# if msg == "":
-#     msg = """ℹ️ Es wurden keine unfertigen Briefe gefunden. Falls Sie etwas anderes erwartet haben, öffnen Sie bitte Sie den Arztbrief, der erstellt werden soll und versuchen Sie es erneut."""
 
-# os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + "\"'")
+if msg == "":
+    msg = """ℹ️ Es wurden keine unfertigen Briefe gefunden. Falls Sie etwas anderes erwartet haben, öffnen Sie bitte Sie den Arztbrief, der erstellt werden soll und versuchen Sie es erneut."""
+
+os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + "\"'")
