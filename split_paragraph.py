@@ -1,22 +1,24 @@
 import utils
+from docx_tools import mv, rm
 
 def process(p):
     edited = False
-    for run in p.runs:
-        i = 0
-        split = False
-        while i < len(run.text):
-            if run.text[i] == "\n":
-                if split == True:
-                    utils.copy_to_new_paragraph(p, run.text[i + 1 :], run)
-                    run.text = run.text[: i - 1]
-                    split = False
-                    edited = True
-                else:
-                    split = True
-            else:
+    split = False
+    i = 0
+    while i < len(p.text):
+        if p.text[i] == "\n":
+            if split == True:
+                p_new = utils.duplicate(p)
+                p_new.text = ""
+                mv(i + 1, len(p.text) - 1, p, p_new)
+                rm(i - 1, i, p)
                 split = False
-            i += 1
+                edited = True
+            else:
+                split = True
+        else:
+            split = False
+        i += 1
     return edited
 
 

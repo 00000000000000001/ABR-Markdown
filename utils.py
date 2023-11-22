@@ -1,17 +1,9 @@
 import hashlib
 import config
-import docx
-import remove_comments
-import split_paragraph
-import create_bullet_lists
 import sqlite3
 from docx.text.paragraph import Paragraph
 from docx.oxml.shared import OxmlElement
-
-
-
-def open_file(filename):
-    return open(filename, "rb")
+import copy
 
 
 def get_hash(file):
@@ -36,21 +28,6 @@ def getText(doc):
     for para in doc.paragraphs:
         fullText.append(para.text)
     return "\n".join(fullText)
-
-
-def convert_file(file):
-    doc = docx.Document(file.name)
-    edited = (
-        remove_comments.run(doc)
-        | split_paragraph.run(doc)
-        | create_bullet_lists.run(doc)
-    )
-    if edited:
-        doc.save(file.name)
-        return open_file(file.name)
-        # True
-    else:
-        return None
 
 
 def register_hash(hash):
@@ -82,16 +59,16 @@ def delete_paragraph(paragraph):
     p.getparent().remove(p)
     paragraph._p = paragraph._element = None
 
-def copy_to_new_paragraph(p, text, run, style=None):
-    new_p = insert_paragraph_after(p, "", style)
-    runner = new_p.add_run(text)
-    runner.bold = run.bold
-    runner.italic = run.italic
-    runner.underline = run.underline
-    runner.font.color.rgb = run.font.color.rgb
-    runner.font.name = run.font.name
-    runner.font.size = run.font.size
-    return new_p
+# def copy_to_new_paragraph(p, text, run, style=None):
+#     new_p = insert_paragraph_after(p, "", style)
+#     runner = new_p.add_run(text)
+#     runner.bold = run.bold
+#     runner.italic = run.italic
+#     runner.underline = run.underline
+#     runner.font.color.rgb = run.font.color.rgb
+#     runner.font.name = run.font.name
+#     runner.font.size = run.font.size
+#     return new_p
 
 # def remove_run(run, p):
 #     i = len(p.runs) - 1
@@ -113,10 +90,10 @@ def copy_to_new_paragraph(p, text, run, style=None):
 #     p_new._p.append(r_new)
 #     return p_new
 
-# def duplicate(p):
-#     p_new = copy.deepcopy(p)
-#     p._p.addnext(p_new._p)
-#     return p_new
+def duplicate(p):
+    p_new = copy.deepcopy(p)
+    p._p.addnext(p_new._p)
+    return p_new
 
 # def remove_runs_to_reverse(p, n):
 #     i = len(p.runs) - 1

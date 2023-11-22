@@ -3,6 +3,27 @@ import os
 import glob
 import re
 import utils
+import remove_comments
+import split_paragraph
+import create_bullet_lists
+import docx
+
+def open_file(filename):
+    return open(filename, "rb")
+
+def convert_file(file):
+    doc = docx.Document(file.name)
+    edited = (
+        # remove_comments.run(doc)
+        split_paragraph.run(doc)
+        # | create_bullet_lists.run(doc)
+    )
+    if edited:
+        doc.save(file.name)
+        return open_file(file.name)
+        # True
+    else:
+        return None
 
 # walk files in tomedo cache
 file_input = config.TOMEDO_CACHE_PROXY
@@ -11,11 +32,11 @@ briefe = glob.glob(file_input + "*.docx")
 msg = ""
 for brief in briefe:  # contains hash accounting and file conversion
     try:
-        file = utils.open_file(brief)
+        file = open_file(brief)
         hash = utils.get_hash(file)
         if utils.is_registered(hash):
             continue
-        file_converted = utils.convert_file(file)
+        file_converted = convert_file(file)
         if file_converted == None:
             utils.register_hash(hash)
             file.close()
