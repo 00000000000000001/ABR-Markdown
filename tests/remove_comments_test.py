@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("../ABR-Markdown")
+sys.path.append("./src")
 
 from docx import Document
 from remove_comments import run
@@ -110,4 +110,4 @@ assert len(document.paragraphs) == 1
 assert document.paragraphs[0].text == "FOO"
 
 
-document.save("./test.docx")
+# document.save("./test.docx")

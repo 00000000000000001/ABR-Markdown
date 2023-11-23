@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("../ABR-Markdown")
+sys.path.append("./src")
 
 from docx import Document
 from create_bullet_lists import run
@@ -132,4 +132,4 @@ run(document)
 assert len(document.paragraphs) == 3
 
 
-document.save("./test.docx")
+# document.save("./test.docx")

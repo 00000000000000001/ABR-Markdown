@@ -1,6 +1,6 @@
 import sys
 
-sys.path.append("../ABR-Markdown")
+sys.path.append("./src")
 
 from docx import Document
 from split_paragraph import run
@@ -37,4 +37,4 @@ assert document.paragraphs[0].text == "FOO"
 assert document.paragraphs[1].text == ""
 assert document.paragraphs[2].text == "BAR"
 
-document.save("./test.docx")
+# document.save("./test.docx")

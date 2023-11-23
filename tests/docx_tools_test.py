@@ -1,5 +1,6 @@
 import sys
-sys.path.append('../ABR-Markdown')
+
+sys.path.append("./src")
 from docx_tools import in_which_run_is, at_which_position_in_its_run_is, cp, rm, mv
 from docx import Document
 
@@ -141,4 +142,4 @@ assert p_src.text == "abchijkl"
 assert p_dest.text == "defg"
 
 
-document.save("test.docx")
+# document.save("./test.docx")
