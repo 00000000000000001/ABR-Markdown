@@ -8,8 +8,10 @@ import split_paragraph
 import create_bullet_lists
 import docx
 
+
 def open_file(filename):
     return open(filename, "rb")
+
 
 def convert_file(file):
     doc = docx.Document(file.name)
@@ -25,13 +27,14 @@ def convert_file(file):
     else:
         return None
 
+
 # walk files in tomedo cache
 file_input = config.TOMEDO_CACHE_PROXY
 briefe = glob.glob(file_input + "*.docx")
 
 msg = ""
 for brief in briefe:  # contains hash accounting and file conversion
-    # try:
+    try:
         file = open_file(brief)
         hash = utils.get_hash(file)
         if utils.is_registered(hash):
@@ -47,10 +50,9 @@ for brief in briefe:  # contains hash accounting and file conversion
             file.close()
             file_converted.close()
             msg += "✅" + re.split(r"(.*)/((.+).docx)", brief)[2] + "\n"
-
-    # except Exception as error:
-    #     print("An exception occurred:", error)
-    #     continue
+    except Exception as error:
+        print("An exception occurred:", error)
+        continue
 
 
 if msg == "":
