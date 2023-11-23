@@ -34,6 +34,9 @@ def cp(m, n, p_src, p_dest):
     r_start = in_which_run_is(m, p_src)
     r_finish = in_which_run_is(n, p_src)
 
+    if r_start == None or r_finish == None:
+        return None
+
     for i in range(r_start, r_finish + 1):
         run = p_src.runs[i]
         r_copy = copy.deepcopy(run)._r
@@ -65,6 +68,9 @@ def rm(m, n, p):
 
     r_start = in_which_run_is(m, p)
     r_finish = in_which_run_is(n, p)
+
+    if r_start == None or r_finish == None:
+        return None
 
     a = -1
     o = -1
