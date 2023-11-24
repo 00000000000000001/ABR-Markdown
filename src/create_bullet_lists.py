@@ -1,5 +1,5 @@
 import utils
-from docx_tools import cp, rm, mv
+from docx_tools import rm, mv
 import copy
 
 

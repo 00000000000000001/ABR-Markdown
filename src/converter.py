@@ -23,7 +23,6 @@ def convert_file(file):
     if edited:
         doc.save(file.name)
         return open_file(file.name)
-        # True
     else:
         return None
 
@@ -50,7 +49,7 @@ for brief in briefe:  # contains hash accounting and file conversion
             utils.register_hash(hash_converted)
             file.close()
             file_converted.close()
-            msg += "✅" + re.split(r"(.*)/((.+).docx)", brief)[2] + "\n"
+            msg += "[✅]" + re.split(r"(.*)/((.+).docx)", brief)[2] + "\n"
     except Exception as error:
         print("An exception occurred:", error)
         continue
