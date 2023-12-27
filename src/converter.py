@@ -10,7 +10,7 @@ import docx
 
 
 account_hashes = True
-show_dialog = False
+show_dialog = True
 
 
 def open_file(filename):
@@ -63,4 +63,4 @@ if msg == "":
     msg = """ℹ️ Es wurden keine unfertigen Briefe gefunden. Falls Sie etwas anderes erwartet haben, öffnen Sie bitte Sie den Arztbrief, der erstellt werden soll und versuchen Sie es erneut."""
 
 if show_dialog:
-    os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + "\"'")
+    os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + '" buttons {"OK"} default button "OK"\'')
