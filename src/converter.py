@@ -9,6 +9,10 @@ import create_bullet_lists
 import docx
 
 
+account_hashes = True
+show_dialog = False
+
+
 def open_file(filename):
     return open(filename, "rb")
 
@@ -37,7 +41,7 @@ for brief in briefe:  # contains hash accounting and file conversion
         print("untersuche: " + brief)
         file = open_file(brief)
         hash = utils.get_hash(file)
-        if utils.is_registered(hash):
+        if account_hashes and utils.is_registered(hash):
             continue
         file_converted = convert_file(file)
         if file_converted == None:
@@ -58,4 +62,5 @@ print("done.")
 if msg == "":
     msg = """ℹ️ Es wurden keine unfertigen Briefe gefunden. Falls Sie etwas anderes erwartet haben, öffnen Sie bitte Sie den Arztbrief, der erstellt werden soll und versuchen Sie es erneut."""
 
-os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + "\"'")
+if show_dialog:
+    os.system('osascript -e \'tell app "Tomedo" to display dialog "' + msg + "\"'")

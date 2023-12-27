@@ -131,5 +131,20 @@ p.add_run("**BAR\nZig\n**ZAG")
 run(document)
 assert len(document.paragraphs) == 3
 
+# Does it remove leading white
+# ** Foo
+# **  BAR
+# **
+# ** 
+document = Document()
+p = document.add_paragraph("")
+p.add_run("** FOO\n** BAR\n**\n** \n** asd ")
+run(document)
+assert document.paragraphs[0].text == "FOO"
+assert document.paragraphs[1].text == "BAR"
+assert document.paragraphs[2].text == ""
+assert document.paragraphs[3].text == ""
+assert document.paragraphs[4].text == "asd "
+
 
 # document.save("./test.docx")

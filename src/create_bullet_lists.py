@@ -34,6 +34,11 @@ def run(document):
                     i -= 1
                 line = ""
                 k = i
+
+                # remove leading whitespaces
+                while 0 < len(p.text) and p.text[i] == " ":
+                    rm(i, i, p)
+
                 while k < len(p.text) and p.text[k] != "\n":
                     line += p.text[k]
                     k += 1
