@@ -64,9 +64,6 @@ class Markdown(object):
                 + msg
                 + '" buttons {"OK"} default button "OK"\''
             )
-            # os.system(
-            #     f"osascript -e 'tell app \"Tomedo\" to display notification \"{msg}\"'"
-            # )
 
     def open_file(filename):
         return open(filename, "rb")
