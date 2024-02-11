@@ -1,5 +1,4 @@
-import utils
-from docx_tools import mv, rm
+from docx_tools import mv, rm, duplicate
 
 def process(p):
     edited = False
@@ -8,7 +7,7 @@ def process(p):
     while i < len(p.text):
         if p.text[i] == "\n":
             if split == True:
-                p_new = utils.duplicate(p)
+                p_new = duplicate(p)
                 p_new.text = ""
                 mv(i + 1, len(p.text) - 1, p, p_new)
                 rm(i - 1, i, p)
@@ -22,7 +21,7 @@ def process(p):
     return edited
 
 
-def run(document):
+def para(document):
     edited = False
     j = 0
     while j < len(document.paragraphs):

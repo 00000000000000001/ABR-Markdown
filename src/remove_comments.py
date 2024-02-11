@@ -7,7 +7,7 @@ def getText(doc):
     return "\n".join(fullText)
 
 
-def run(document):
+def comments(document):
     edited = False
     delete = False
     consume = False

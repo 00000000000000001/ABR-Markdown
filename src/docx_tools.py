@@ -1,4 +1,46 @@
 import copy
+from docx.text.paragraph import Paragraph
+from docx.oxml.shared import OxmlElement
+
+
+def docText(doc):
+    fullText = ""
+    for para in doc.paragraphs:
+        fullText += para.text
+    return fullText
+
+
+def duplicate(p):
+    p_new = copy.deepcopy(p)
+    p._p.addnext(p_new._p)
+    return p_new
+
+
+def deleteParagraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    paragraph._p = paragraph._element = None
+
+
+def appendParagraph(paragraph, text=None, style=None):
+    try:
+        """Insert a new paragraph after the given paragraph."""
+        new_p = OxmlElement("w:p")
+        paragraph._p.addnext(new_p)
+        new_para = Paragraph(new_p, paragraph._parent)
+        if text:
+            new_para.add_run(text)
+        if style is not None:
+            new_para.style = style
+        return new_para
+    except:
+        print("Error when inserting paragraph")
+
+
+def delete_paragraph(paragraph):
+    p = paragraph._element
+    p.getparent().remove(p)
+    paragraph._p = paragraph._element = None
 
 
 def in_which_run_is(m, p):

@@ -1,69 +1,98 @@
-import utils
-from docx_tools import rm, mv
-import copy
+from docx_tools import cp, appendParagraph, deleteParagraph
+import re
 
 
-def run(document):
-    edited = False
-    l = 0
-    while l < len(document.paragraphs):
-        p = document.paragraphs[l]
-        p_last = p
-        is_new_line = True
-        could_be_a_list_item = False
-        moved = False
-        i = 0
-        while i < len(p.text):
-            if p.text[i] == "\n":
-                is_new_line = True
-                i += 1
-                continue
-            if is_new_line and p.text[i] == "*":
-                could_be_a_list_item = True
-                is_new_line = False
-                moved = False
-                i += 1
-                continue
-            if could_be_a_list_item and p.text[i] == "*":
-                edited = True
-                if i > 1:
-                    rm(i - 2, i, p)
-                    i -= 2
-                else:
-                    rm(i - 1, i, p)
-                    i -= 1
-                line = ""
-                k = i
+# Ersetzungsregeln Bullet List (BL)
+# I:    (** v)n|(• v)n
+# II:   (** v\nw)n|(• v)n(w)n+1
+# III:  (w\n** v)n|(w)n(• v)n+1
+# IV:   (w\n** v1\nv2)n|(w)n(• v)n+1(v2)n+2
 
-                # remove leading whitespaces
-                while 0 < len(p.text) and p.text[i] == " ":
-                    rm(i, i, p)
 
-                while k < len(p.text) and p.text[k] != "\n":
-                    line += p.text[k]
-                    k += 1
-                p_new = utils.insert_paragraph_after(p_last, "", "List Bullet")
-                mv(i, k - 1, p, p_new)
-                if p.text == "":
-                    utils.delete_paragraph(p)
-                    break
-                p_last = p_new
-                moved = True
+def blI(paragraph):
+    text = paragraph.text
+    posOfBullet = text.find("** ")
+    if (
+        posOfBullet == 0
+        # and len(text) >= 3
+        and not re.search(r"\n", text[3:])
+    ):
+        pN = appendParagraph(paragraph, "", "List Bullet")
+        cp(3, len(text) - 1, paragraph, pN)
+        deleteParagraph(paragraph)
+        return True
+    return False
+
+
+def blII(paragraph):
+    text = paragraph.text
+    posOfBullet = text.find("** ")
+    if (
+        posOfBullet == 0
+        # and len(text) >= 3
+        and re.search(r"\n", text[posOfBullet + 3 :])
+    ):
+        pN = appendParagraph(paragraph, "", "List Bullet")
+        posOfLineBreak = text.find("\n")
+        cp(3, posOfLineBreak - 1, paragraph, pN)
+        pN1 = appendParagraph(pN)
+        cp(posOfLineBreak + 1, len(text) - 1, paragraph, pN1)
+        deleteParagraph(paragraph)
+        return True
+    return False
+
+
+def blIII(paragraph):
+    text = paragraph.text
+    posOfBullet = text.find("\n** ")
+    if posOfBullet > -1 and not re.search(r"\n", text[posOfBullet + 4 :]):
+        pN = appendParagraph(paragraph)
+        cp(0, posOfBullet - 1, paragraph, pN)
+        pN1 = appendParagraph(pN, "", "List Bullet")
+        cp(posOfBullet + 4, len(text) - 1, paragraph, pN1)
+        deleteParagraph(paragraph)
+        return True
+    return False
+
+
+def blIV(paragraph):
+    text = paragraph.text
+    posOfBullet = text.find("\n** ")
+    if posOfBullet > -1 and re.search(r"\n", text[posOfBullet + 4 :]):
+        pN = appendParagraph(paragraph)
+        cp(0, posOfBullet - 1, paragraph, pN)
+        pN1 = appendParagraph(pN, "", "List Bullet")
+        posOfLineBreak = text[posOfBullet + 4 :].find("\n") + posOfBullet + 4
+        cp(posOfBullet + 4, posOfLineBreak - 1, paragraph, pN1)
+        pN2 = appendParagraph(pN1)
+        cp(posOfLineBreak + 1, len(text) - 1, paragraph, pN2)
+        deleteParagraph(paragraph)
+        return True
+    return False
+
+
+def bulletList(doc):
+    wasEdited = False
+    try:
+        l = 0
+        while l < len(doc.paragraphs):
+            if blI(doc.paragraphs[l]):
+                wasEdited = True
+                l += 1
                 continue
-            if moved and p.text[i] != "*":
-                p_new = copy.deepcopy(p)
-                p_new._p.clear()
-                p_last._p.addnext(p_new._p)
-                mv(i, len(p.text) - 1, p, p_new)
-                if p.text[len(p.text) - 1] == "\n":
-                    rm(len(p.text) - 1, len(p.text) - 1, p)
-                    if p.text == "":
-                        utils.delete_paragraph(p)
-                        break
-                p_last = p_new
-                moved = False
-                i += 1
+            elif blII(doc.paragraphs[l]):
+                wasEdited = True
+                l += 1
                 continue
-            i += 1
-        l += 1
-    return edited
+            elif blIII(doc.paragraphs[l]):
+                wasEdited = True
+                l += 1
+                continue
+            elif blIV(doc.paragraphs[l]):
+                wasEdited = True
+                l += 2
+                continue
+            l += 1
+        return wasEdited
+    except:
+        print("Error when converting the bullet list")

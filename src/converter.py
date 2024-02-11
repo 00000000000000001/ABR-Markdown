@@ -1,85 +1,43 @@
 import config
-import os
 import glob
 import re
-import utils
-import remove_comments
-import split_paragraph
-import create_bullet_lists
 import docx
 import fcntl
 import sys
+import os
+from docx_tools import docText
+import remove_comments, split_paragraph, create_bullet_lists
 
-# Markdown ist eine Singleton-Klasse
 
-class Markdown(object):
-    _instance = None
+def hasBriefkommando(string):
+    return re.search(r"\$\[.+\]\$", string)
 
-    account_hashes = True
-    show_dialog = True
 
-    def __new__(cls):
-        if cls._instance is None:
-            print("Creating the object")
-            cls._instance = super(Markdown, cls).__new__(cls)
-            # Put any initialization here.
-            cls.init(cls)
-        return cls._instance
+def hasMDSyntax(string):
+    return (
+        re.search(r"\{.+\}", string)
+        or re.search(r"[\r\n]{2,}", string)
+        or re.search(r"\*\*.*", string)
+    )
 
-    def init(self):
-        # walk files in tomedo cache
-        file_input = config.TOMEDO_CACHE_PROXY
-        briefe = glob.glob(file_input + "*.docx")
 
-        msg = ""
-        for brief in briefe:  # contains hash accounting and file conversion
-            try:
-                print("untersuche: " + brief)
-                file = self.open_file(brief)
-                hash = utils.get_hash(file)
-                if self.account_hashes and utils.is_registered(hash):
-                    continue
-                file_converted = self.convert_file(self, file)
-                if file_converted == None:
-                    utils.register_hash(hash)
-                    file.close()
-                    continue
-                else:
-                    hash_converted = utils.get_hash(file_converted)
-                    utils.register_hash(hash_converted)
-                    file.close()
-                    file_converted.close()
-                    msg += "[✅]" + re.split(r"(.*)/((.+).docx)", brief)[2] + "\n"
-            except Exception as error:
-                print("An exception occurred:", error)
-                continue
+def convert_file(doc):
+    wasEdited = False
+    try:
+        wasEdited |= remove_comments.comments(doc)
+        wasEdited |= split_paragraph.para(doc)
+        wasEdited |= create_bullet_lists.bulletList(doc)
+    except:
+        print("Error when converting docx")
+    return wasEdited
 
-        print("done.")
-        if msg == "":
-            msg = """ℹ️ Es wurden keine unfertigen Briefe gefunden. Falls Sie etwas anderes erwartet haben, öffnen Sie bitte Sie den Arztbrief, der erstellt werden soll und versuchen Sie es erneut."""
 
-        if self.show_dialog:
-            os.system(
-                'osascript -e \'tell app "Tomedo" to display dialog "'
-                + msg
-                + '" buttons {"OK"} default button "OK"\''
-            )
-
-    def open_file(filename):
-        return open(filename, "rb")
-
-    def convert_file(self, file):
-        doc = docx.Document(file.name)
-        edited = (
-            remove_comments.run(doc)
-            | split_paragraph.run(doc)
-            | create_bullet_lists.run(doc)
-        )
-        if edited:
-            doc.save(file.name)
-            return self.open_file(file.name)
-        else:
-            return None
+def showMessage(text):
+    os.system(
+        'osascript -e \'tell app "Tomedo" to display dialog "'
+        + text
+        + '" buttons {"OK"} default button "OK"\''
+    )
 
 
 lock_file_path = "/tmp/my_script.lock"
@@ -93,7 +51,47 @@ except IOError:
     sys.exit(1)
 
 # Hier folgt der eigentliche Code des Skripts
-Markdown()
+import tkinter as tk
+
+fenster = tk.Tk()
+fenster.title("Markdown")
+label = tk.Label(fenster, text="", justify="left")
+label.pack()
+
+from threading import *
+
+
+def threading():
+    t1 = Thread(target=work)
+    t1.start()
+
+
+def work():
+    file_input = config.TOMEDO_CACHE_PROXY
+
+    briefe = glob.glob(file_input + "*.docx")
+
+    labelText = ""
+
+    for brief in briefe:
+
+        doc = docx.Document(brief)
+        text = docText(doc)
+        if hasBriefkommando(text) or not hasMDSyntax(text):
+            continue
+
+        label.config(text="Konvertiere: " + brief.strip())  # tk
+
+        if convert_file(doc):
+            doc.save(brief)
+    fenster.after(0, lambda: fenster.quit())  # tk
+    # showMessage("Markdown: Fertig!")
+
+
+threading()
+
+fenster.mainloop()
+
 
 # Am Ende den Lock freigeben
 fcntl.flock(lock_file, fcntl.LOCK_UN)
