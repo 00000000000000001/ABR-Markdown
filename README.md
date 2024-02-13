@@ -1,2 +1,2 @@
 # ABR-Markdown
-Tiny markdown Sprache für tomedo Arztbriefe (.docx)
+Tiny Markdown für tomedo Arztbriefe (.docx)
