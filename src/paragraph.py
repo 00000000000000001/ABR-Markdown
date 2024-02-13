@@ -1,32 +1,34 @@
 from docxTools import mv, rm, duplicate
 
 def process(p):
-    edited = False
+    wasEdited = False
     split = False
+    text = p.text
     i = 0
-    while i < len(p.text):
-        if p.text[i] == "\n":
+    while i < len(text):
+        if text[i] == "\n":
             if split == True:
                 p_new = duplicate(p)
                 p_new.text = ""
-                mv(i + 1, len(p.text) - 1, p, p_new)
+                mv(i + 1, len(text) - 1, p, p_new)
                 rm(i - 1, i, p)
+                text = p.text
                 split = False
-                edited = True
+                wasEdited = True
             else:
                 split = True
         else:
             split = False
         i += 1
-    return edited
+    return wasEdited
 
 
 def subdivide(doc):
-    edited = False
+    wasEdited = False
     j = 0
     while j < len(doc.paragraphs):
         print("inserting paragrapgs in paragraph " + str(j) + " (" + str(doc) + ")")
         p = doc.paragraphs[j]
-        edited |= process(p)
+        wasEdited |= process(p)
         j += 1
-    return edited
+    return wasEdited
