@@ -1,28 +1,29 @@
 import sys
 
 sys.path.append("../src")
+sys.path.append("./src")
 from docx import Document
-import remove_comments, split_paragraph, create_bullet_lists
+import comments, paragraph, bulletList
 
 def run():
     doc = Document()
     p_src = doc.add_paragraph("")
-    assert remove_comments.comments(doc) | split_paragraph.para(doc) | create_bullet_lists.bulletList(doc) == False
+    assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == False
 
     doc = Document()
     p_src = doc.add_paragraph("{}")
-    assert remove_comments.comments(doc) | split_paragraph.para(doc) | create_bullet_lists.bulletList(doc) == True
+    assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == True
 
     doc = Document()
     p_src = doc.add_paragraph("FOO\n\nBAR")
-    assert remove_comments.comments(doc) | split_paragraph.para(doc) | create_bullet_lists.bulletList(doc) == True
+    assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == True
 
     doc = Document()
     p_src = doc.add_paragraph("** FOO")
-    assert remove_comments.comments(doc) | split_paragraph.para(doc) | create_bullet_lists.bulletList(doc) == True
+    assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == True
 
     doc = Document()
     p_src = doc.add_paragraph("FOO")
-    assert remove_comments.comments(doc) | split_paragraph.para(doc) | create_bullet_lists.bulletList(doc) == False
+    assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == False
 
     # doc.save("test.docx")

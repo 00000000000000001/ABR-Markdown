@@ -3,20 +3,20 @@ import sys
 sys.path.append("../src")
 
 from docx import Document
-from split_paragraph import para
+from paragraph import subdivide
 
 def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("")
-    para(document)
+    subdivide(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == ""
 
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n\nBAR")
-    para(document)
+    subdivide(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -24,7 +24,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n\n\nBAR")
-    para(document)
+    subdivide(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "\nBAR"
@@ -32,7 +32,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n\n\n\nBAR")
-    para(document)
+    subdivide(document)
     assert len(document.paragraphs) == 3
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == ""

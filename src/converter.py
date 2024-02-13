@@ -5,8 +5,8 @@ import docx
 import fcntl
 import sys
 import os
-from docx_tools import docText
-import remove_comments, split_paragraph, create_bullet_lists
+from docxTools import docText
+import comments, paragraph, bulletList
 
 
 def hasBriefkommando(string):
@@ -24,9 +24,9 @@ def hasMDSyntax(string):
 def convert_file(doc):
     wasEdited = False
     try:
-        wasEdited |= remove_comments.comments(doc)
-        wasEdited |= split_paragraph.para(doc)
-        wasEdited |= create_bullet_lists.bulletList(doc)
+        wasEdited |= comments.removeComments(doc)
+        wasEdited |= paragraph.subdivide(doc)
+        wasEdited |= bulletList.substitute(doc)
     except:
         print("Error when converting docx")
     return wasEdited
@@ -70,8 +70,6 @@ def work():
     file_input = config.TOMEDO_CACHE_PROXY
 
     briefe = glob.glob(file_input + "*.docx")
-
-    labelText = ""
 
     for brief in briefe:
 

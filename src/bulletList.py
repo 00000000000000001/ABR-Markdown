@@ -1,4 +1,4 @@
-from docx_tools import cp, appendParagraph, deleteParagraph
+from docxTools import cp, appendParagraph, deleteParagraph
 import re
 
 
@@ -71,7 +71,7 @@ def blIV(paragraph):
     return False
 
 
-def bulletList(doc):
+def substitute(doc):
     wasEdited = False
     try:
         l = 0

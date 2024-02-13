@@ -1,4 +1,4 @@
-from docx_tools import mv, rm, duplicate
+from docxTools import mv, rm, duplicate
 
 def process(p):
     edited = False
@@ -21,7 +21,7 @@ def process(p):
     return edited
 
 
-def para(document):
+def subdivide(document):
     edited = False
     j = 0
     while j < len(document.paragraphs):

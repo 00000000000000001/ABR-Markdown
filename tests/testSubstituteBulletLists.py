@@ -4,7 +4,7 @@ sys.path.append("../src")
 sys.path.append("./src")
 
 from docx import Document
-from create_bullet_lists import bulletList, blI
+from bulletList import substitute
 
 
 def run():
@@ -13,7 +13,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** ")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == ""
 
@@ -21,7 +21,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** v")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == "v"
 
@@ -30,7 +30,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** ")
     p.add_run("\n")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == ""
     assert document.paragraphs[1].text == ""
@@ -40,7 +40,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** v")
     p.add_run("\nw")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "v"
     assert document.paragraphs[1].text == "w"
@@ -50,7 +50,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("\n")
     p.add_run("** ")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == ""
     assert document.paragraphs[1].text == ""
@@ -60,7 +60,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("w\n")
     p.add_run("** v")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "w"
     assert document.paragraphs[1].text == "v"
@@ -70,7 +70,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("\n")
     p.add_run("** \n")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 3
     assert document.paragraphs[0].text == ""
     assert document.paragraphs[1].text == ""
@@ -81,7 +81,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("w\n")
     p.add_run("** v1\nv2")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 3
     assert document.paragraphs[0].text == "w"
     assert document.paragraphs[1].text == "v1"
@@ -91,14 +91,14 @@ def run():
 
     document = Document()
     document.add_paragraph("")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == ""
 
     document = Document()
     document.add_paragraph("")
     document.add_paragraph("")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == ""
     assert document.paragraphs[1].text == ""
@@ -106,7 +106,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == ""
 
@@ -114,7 +114,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("")
     p.add_run("")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == ""
 
@@ -123,7 +123,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("FOO")
     p.add_run("BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == "FOOBAR"
 
@@ -133,7 +133,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("FOO\n")
     p.add_run("BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == "FOO\nBAR"
 
@@ -142,7 +142,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** FOO")
     p.add_run("BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == "FOOBAR"
 
@@ -151,7 +151,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** FOO")
     p.add_run("** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 1
     assert document.paragraphs[0].text == "FOO** BAR"
 
@@ -161,7 +161,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** FOO\n")
     p.add_run("** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -172,7 +172,7 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** FOO")
     p.add_run("\n** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -182,7 +182,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** FOO\n** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -192,7 +192,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** FOO\nBAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -202,7 +202,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -212,7 +212,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n** BAR")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -224,7 +224,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("FOO\n** BAR\nZIG\n** ZAG")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 4
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
@@ -237,7 +237,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** BAR\nZIG\n** ZAG")
-    bulletList(document)
+    substitute(document)
     assert len(document.paragraphs) == 3
     assert document.paragraphs[0].text == "BAR"
     assert document.paragraphs[1].text == "ZIG"
@@ -251,7 +251,7 @@ def run():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("** FOO\n** BAR\n** \n** \n** asd ")
-    bulletList(document)
+    substitute(document)
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == "BAR"
     assert document.paragraphs[2].text == ""

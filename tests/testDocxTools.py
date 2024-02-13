@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append("../src")
-from docx_tools import in_which_run_is, at_which_position_in_its_run_is, cp, rm, mv
+from docxTools import in_which_run_is, at_which_position_in_its_run_is, cp, rm, mv
 from docx import Document
 
 def run():
