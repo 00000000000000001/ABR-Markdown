@@ -76,6 +76,7 @@ def substitute(doc):
     try:
         l = 0
         while l < len(doc.paragraphs):
+            print("replacing bullet list in paragraph " + str(l) + " (" + str(doc) + ")")
             if blI(doc.paragraphs[l]):
                 wasEdited = True
                 l += 1

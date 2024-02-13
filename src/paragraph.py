@@ -21,11 +21,12 @@ def process(p):
     return edited
 
 
-def subdivide(document):
+def subdivide(doc):
     edited = False
     j = 0
-    while j < len(document.paragraphs):
-        p = document.paragraphs[j]
+    while j < len(doc.paragraphs):
+        print("inserting paragrapgs in paragraph " + str(j) + " (" + str(doc) + ")")
+        p = doc.paragraphs[j]
         edited |= process(p)
         j += 1
     return edited
