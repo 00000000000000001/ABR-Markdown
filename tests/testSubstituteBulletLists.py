@@ -31,9 +31,8 @@ def run():
     p.add_run("** ")
     p.add_run("\n")
     substitute(document)
-    assert len(document.paragraphs) == 2
-    assert document.paragraphs[0].text == ""
-    assert document.paragraphs[1].text == ""
+    assert len(document.paragraphs) == 1
+    assert document.paragraphs[0].text == "\n"
 
     # II: (** v\nw)
     document = Document()
@@ -41,9 +40,8 @@ def run():
     p.add_run("** v")
     p.add_run("\nw")
     substitute(document)
-    assert len(document.paragraphs) == 2
-    assert document.paragraphs[0].text == "v"
-    assert document.paragraphs[1].text == "w"
+    assert len(document.paragraphs) == 1
+    assert document.paragraphs[0].text == "v\nw"
 
     # III: (\n** )
     document = Document()
@@ -71,10 +69,10 @@ def run():
     p.add_run("\n")
     p.add_run("** \n")
     substitute(document)
-    assert len(document.paragraphs) == 3
+    assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == ""
-    assert document.paragraphs[1].text == ""
-    assert document.paragraphs[2].text == ""
+    assert document.paragraphs[1].text == "\n"
+
 
     # IV: (w\n** v1\nv2)
     document = Document()
@@ -82,10 +80,9 @@ def run():
     p.add_run("w\n")
     p.add_run("** v1\nv2")
     substitute(document)
-    assert len(document.paragraphs) == 3
+    assert len(document.paragraphs) == 2
     assert document.paragraphs[0].text == "w"
-    assert document.paragraphs[1].text == "v1"
-    assert document.paragraphs[2].text == "v2"
+    assert document.paragraphs[1].text == "v1\nv2"
 
     ##
 
@@ -193,9 +190,8 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** FOO\nBAR")
     substitute(document)
-    assert len(document.paragraphs) == 2
-    assert document.paragraphs[0].text == "FOO"
-    assert document.paragraphs[1].text == "BAR"
+    assert len(document.paragraphs) == 1
+    assert document.paragraphs[0].text == "FOO\nBAR"
 
     # FOO
     # **BAR
@@ -225,11 +221,10 @@ def run():
     p = document.add_paragraph("")
     p.add_run("FOO\n** BAR\nZIG\n** ZAG")
     substitute(document)
-    assert len(document.paragraphs) == 4
+    assert len(document.paragraphs) == 3
     assert document.paragraphs[0].text == "FOO"
-    assert document.paragraphs[1].text == "BAR"
-    assert document.paragraphs[2].text == "ZIG"
-    assert document.paragraphs[3].text == "ZAG"
+    assert document.paragraphs[1].text == "BAR\nZIG"
+    assert document.paragraphs[2].text == "ZAG"
 
     # **BAR
     # ZIG
@@ -238,10 +233,9 @@ def run():
     p = document.add_paragraph("")
     p.add_run("** BAR\nZIG\n** ZAG")
     substitute(document)
-    assert len(document.paragraphs) == 3
-    assert document.paragraphs[0].text == "BAR"
-    assert document.paragraphs[1].text == "ZIG"
-    assert document.paragraphs[2].text == "ZAG"
+    assert len(document.paragraphs) == 2
+    assert document.paragraphs[0].text == "BAR\nZIG"
+    assert document.paragraphs[1].text == "ZAG"
 
     # Does it remove leading white
     # ** Foo

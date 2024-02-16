@@ -58,6 +58,11 @@ fenster.title("Markdown")
 label = tk.Label(fenster, text="", justify="left")
 label.pack()
 
+score1 = "FOO"
+
+def promptTK(string):
+    True
+
 from threading import *
 
 
