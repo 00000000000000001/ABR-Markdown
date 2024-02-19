@@ -50,18 +50,37 @@ except IOError:
     print("Das Skript wird bereits ausgeführt. Beende.")
     sys.exit(1)
 
+
 # Hier folgt der eigentliche Code des Skripts
 import tkinter as tk
+from tkinter import ttk
+
+
+def update_progress(step):
+    progress["value"] += step
+    if progress["value"] >= progress["maximum"]:
+        fenster.after(555, lambda: fenster.quit())
+
 
 fenster = tk.Tk()
 fenster.title("Markdown")
-label = tk.Label(fenster, text="", justify="left")
-label.pack()
+label = tk.Label(fenster, text="analysiere...", justify="left")
+label.grid(column=0, row=0, columnspan=2, rowspan=1)
 
-score1 = "FOO"
+progress = ttk.Progressbar(fenster, orient="horizontal", length=200, maximum=100)
+progress.grid(column=0, row=1, columnspan=2, rowspan=1)
 
-def promptTK(string):
-    True
+
+# def promptTK(string):
+#     if label.cget("text") == "analysiere...":
+#         label.config(text="analysiere")
+#     elif label.cget("text") == "analysiere":
+#         label.config(text="analysiere.")
+#     elif label.cget("text") == "analysiere.":
+#         label.config(text="analysiere..")
+#     elif label.cget("text") == "analysiere..":
+#         label.config(text="analysiere...")
+
 
 from threading import *
 
@@ -76,19 +95,20 @@ def work():
 
     briefe = glob.glob(file_input + "*.docx")
 
+    number = len(briefe)
+    step = 100 / number
+
     for brief in briefe:
+
+        update_progress(step)
 
         doc = docx.Document(brief)
         text = docText(doc)
         if hasBriefkommando(text) or not hasMDSyntax(text):
             continue
 
-        label.config(text="Konvertiere: " + brief.strip())  # tk
-
         if convert_file(doc):
             doc.save(brief)
-    fenster.after(0, lambda: fenster.quit())  # tk
-    # showMessage("Markdown: Fertig!")
 
 
 threading()

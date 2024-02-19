@@ -1,4 +1,5 @@
 from docxTools import rm
+import sys
 
 
 def removeComments(doc):

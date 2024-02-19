@@ -1,5 +1,6 @@
 from docxTools import mv, rm, duplicate
 
+
 def process(p):
     wasEdited = False
     split = False
