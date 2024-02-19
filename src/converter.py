@@ -100,16 +100,17 @@ def work():
 
     for brief in briefe:
 
-        update_progress(step)
 
         doc = docx.Document(brief)
         text = docText(doc)
         if hasBriefkommando(text) or not hasMDSyntax(text):
+            update_progress(step)
             continue
 
         if convert_file(doc):
             doc.save(brief)
 
+        update_progress(step)
 
 threading()
 
