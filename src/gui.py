@@ -9,9 +9,6 @@ fenster.title("Markdown")
 labelInfo = tk.Label(fenster, text="-", justify="left", anchor="w", width=40)
 labelInfo.grid(column=0, row=0, columnspan=2, rowspan=1, sticky="w")
 
-# labelFortschritt = tk.Label(fenster, text="Gesamtfortschritt: ", justify="left", anchor="w")
-# labelFortschritt.grid(column=0, row=1, columnspan=1, rowspan=1, sticky="w")
-
 progress = ttk.Progressbar(fenster, orient="horizontal", length=200, maximum=100)
 progress.grid(column=0, row=1, columnspan=2, rowspan=1, sticky="ew")
 
@@ -21,5 +18,3 @@ def showMsg(string):
 
 def updateProgress(step):
     progress["value"] += step
-    # if progress["value"] >= progress["maximum"]:
-    #     fenster.after(555, lambda: fenster.quit())

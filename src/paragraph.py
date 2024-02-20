@@ -1,27 +1,19 @@
-from docxTools import mv, rm, duplicate
+from docxTools import rm, duplicate
 from gui import showMsg
 
+# Ersetzungsregeln Paragraph (P)
+# I:    (u\n\nv)n|(u)n(v)n+1
 
-def process(p):
+def process(pN):
     wasEdited = False
-    split = False
-    text = p.text
-    i = 0
-    while i < len(text):
-        if text[i] == "\n":
-            if split == True:
-                p_new = duplicate(p)
-                p_new.text = ""
-                mv(i + 1, len(text) - 1, p, p_new)
-                rm(i - 1, i, p)
-                text = p.text
-                split = False
-                wasEdited = True
-            else:
-                split = True
-        else:
-            split = False
-        i += 1
+    text = pN.text
+    i = text.find("\n\n")
+    if i != -1:
+        pN1 = duplicate(pN)
+        rm(i, len(text) - 1, pN)
+        rm(0, i + 2 - 1, pN1)
+        wasEdited = True
+
     return wasEdited
 
 
@@ -30,7 +22,13 @@ def subdivide(doc):
     j = 0
     while j < len(doc.paragraphs):
 
-        showMsg("replacing double line breaks in paragraph " + str(j) + " (" + str(doc) + ")")
+        showMsg(
+            "replacing double line breaks in paragraph "
+            + str(j)
+            + " ("
+            + str(doc)
+            + ")"
+        )
 
         p = doc.paragraphs[j]
         wasEdited |= process(p)

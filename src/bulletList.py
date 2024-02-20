@@ -71,7 +71,11 @@ def substitute(doc):
         while l < len(doc.paragraphs):
 
             showMsg(
-                "replacing double asterisks in paragraph " + str(l) + " (" + str(doc) + ")"
+                "replacing double asterisks in paragraph "
+                + str(l)
+                + " ("
+                + str(doc)
+                + ")"
             )
 
             if blI(doc.paragraphs[l]):

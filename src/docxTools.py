@@ -136,6 +136,8 @@ def rm(m, n, p):
     for run in reversed(arr):
         remove_run(run, p)
 
+    return p
+
 
 def mv(m, n, p_src, p_dest):
     cp(m, n, p_src, p_dest)

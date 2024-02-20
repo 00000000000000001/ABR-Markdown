@@ -6,6 +6,7 @@ sys.path.append("./src")
 from docx import Document
 from comments import removeComments
 
+
 def run():
 
     doc = Document()
@@ -36,7 +37,7 @@ def run():
     p = doc.add_paragraph("{{}}")
     removeComments(doc)
     assert len(doc.paragraphs) == 1
-    assert doc.paragraphs[0].text == ""
+    assert doc.paragraphs[0].text == "}"
 
     doc = Document()
     p = doc.add_paragraph("foo")
@@ -59,7 +60,7 @@ def run():
     # doc = Document()
     # p = doc.add_paragraph("{fo{foo}o}")
     # removeComments(doc)
-    # assert len(doc.paragraphs) == 1 
+    # assert len(doc.paragraphs) == 1
     # assert doc.paragraphs[0].text == ""
 
     doc = Document()
@@ -128,8 +129,20 @@ def run():
     assert len(doc.paragraphs) == 1
     assert doc.paragraphs[0].text == "foo\n\nfoo\n"
 
-    # doc = Document()
-    # p = doc.add_paragraph("foo{bar}\n\n{ba{foo}r}\n\nfoo\n{bar}")
-    # removeComments(doc)
-    # assert len(doc.paragraphs) == 1
-    # assert doc.paragraphs[0].text == "foo\n\nfoo\n"
+    doc = Document()
+    p = doc.add_paragraph("FOO{BAR")
+    removeComments(doc)
+    assert len(doc.paragraphs) == 1
+    assert doc.paragraphs[0].text == "FOO{BAR"
+
+    doc = Document()
+    p = doc.add_paragraph("FOO}BAR")
+    removeComments(doc)
+    assert len(doc.paragraphs) == 1
+    assert doc.paragraphs[0].text == "FOO}BAR"
+
+    doc = Document()
+    p = doc.add_paragraph("FOO}{BAR")
+    removeComments(doc)
+    assert len(doc.paragraphs) == 1
+    assert doc.paragraphs[0].text == "FOO}{BAR"

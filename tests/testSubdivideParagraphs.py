@@ -37,5 +37,15 @@ def run():
     assert document.paragraphs[0].text == "FOO"
     assert document.paragraphs[1].text == ""
     assert document.paragraphs[2].text == "BAR"
+    
+    document = Document()
+    p = document.add_paragraph("")
+    p.add_run("FOO\n\n\n\n\n\nBAR")
+    subdivide(document)
+    assert len(document.paragraphs) == 4
+    assert document.paragraphs[0].text == "FOO"
+    assert document.paragraphs[1].text == ""
+    assert document.paragraphs[2].text == ""
+    assert document.paragraphs[3].text == "BAR"
 
     # document.save("./test.docx")
