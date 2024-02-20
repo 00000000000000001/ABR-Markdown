@@ -52,36 +52,8 @@ except IOError:
 
 
 # Hier folgt der eigentliche Code des Skripts
-import tkinter as tk
-from tkinter import ttk
 
-
-def update_progress(step):
-    progress["value"] += step
-    if progress["value"] >= progress["maximum"]:
-        fenster.after(555, lambda: fenster.quit())
-
-
-fenster = tk.Tk()
-fenster.title("Markdown")
-label = tk.Label(fenster, text="analysiere...", justify="left")
-label.grid(column=0, row=0, columnspan=2, rowspan=1)
-
-progress = ttk.Progressbar(fenster, orient="horizontal", length=200, maximum=100)
-progress.grid(column=0, row=1, columnspan=2, rowspan=1)
-
-
-# def promptTK(string):
-#     if label.cget("text") == "analysiere...":
-#         label.config(text="analysiere")
-#     elif label.cget("text") == "analysiere":
-#         label.config(text="analysiere.")
-#     elif label.cget("text") == "analysiere.":
-#         label.config(text="analysiere..")
-#     elif label.cget("text") == "analysiere..":
-#         label.config(text="analysiere...")
-
-
+from gui import fenster, updateProgress
 from threading import *
 
 
@@ -100,17 +72,19 @@ def work():
 
     for brief in briefe:
 
-
         doc = docx.Document(brief)
         text = docText(doc)
         if hasBriefkommando(text) or not hasMDSyntax(text):
-            update_progress(step)
+            updateProgress(step)
             continue
 
         if convert_file(doc):
             doc.save(brief)
 
-        update_progress(step)
+        updateProgress(step)
+
+    fenster.after(555, lambda: fenster.quit())
+
 
 threading()
 

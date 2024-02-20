@@ -1,4 +1,5 @@
 from docxTools import mv, rm, duplicate
+from gui import promptTK
 
 
 def process(p):
@@ -28,7 +29,9 @@ def subdivide(doc):
     wasEdited = False
     j = 0
     while j < len(doc.paragraphs):
-        print("inserting paragrapgs in paragraph " + str(j) + " (" + str(doc) + ")")
+        
+        promptTK("inserting paragrapgs in paragraph " + str(j) + " (" + str(doc) + ")")
+
         p = doc.paragraphs[j]
         wasEdited |= process(p)
         j += 1
