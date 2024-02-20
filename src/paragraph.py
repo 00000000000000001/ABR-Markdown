@@ -30,7 +30,7 @@ def subdivide(doc):
     j = 0
     while j < len(doc.paragraphs):
 
-        showMsg("inserting paragrapgs in paragraph " + str(j) + " (" + str(doc) + ")")
+        showMsg("replacing double line breaks in paragraph " + str(j) + " (" + str(doc) + ")")
 
         p = doc.paragraphs[j]
         wasEdited |= process(p)
