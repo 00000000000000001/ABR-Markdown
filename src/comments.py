@@ -11,7 +11,7 @@ def removeComments(doc):
         i = 0
         while i < len(text):
             
-            showMsg("Analysing letter: " + str(i) + " text length: " + str(len(text)))
+            showMsg("analysing letter: " + str(i) + " text length: " + str(len(text)))
 
             if text[i] == "}":
                 rm(i, i, p)
