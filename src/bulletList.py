@@ -1,6 +1,6 @@
 from docxTools import cp, appendParagraph, deleteParagraph
+from gui import showMsg
 import re
-from gui import promptTK
 
 
 # Ersetzungsregeln Bullet List (BL)
@@ -70,7 +70,7 @@ def substitute(doc):
         l = 0
         while l < len(doc.paragraphs):
 
-            promptTK(
+            showMsg(
                 "replacing bullet list in paragraph " + str(l) + " (" + str(doc) + ")"
             )
 

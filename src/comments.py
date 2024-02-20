@@ -1,5 +1,5 @@
 from docxTools import rm
-from gui import promptTK
+from gui import showMsg
 
 
 def removeComments(doc):
@@ -11,7 +11,7 @@ def removeComments(doc):
         i = 0
         while i < len(text):
             
-            promptTK("Analysing letter: " + str(i) + " text length: " + str(len(text)))
+            showMsg("Analysing letter: " + str(i) + " text length: " + str(len(text)))
 
             if text[i] == "}":
                 rm(i, i, p)

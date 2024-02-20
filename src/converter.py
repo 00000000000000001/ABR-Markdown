@@ -7,6 +7,8 @@ import sys
 import os
 from docxTools import docText
 import comments, paragraph, bulletList
+from gui import fenster, updateProgress
+from threading import *
 
 
 def hasBriefkommando(string):
@@ -53,9 +55,6 @@ except IOError:
 
 # Hier folgt der eigentliche Code des Skripts
 
-from gui import fenster, updateProgress
-from threading import *
-
 
 def threading():
     t1 = Thread(target=work)
@@ -74,6 +73,7 @@ def work():
 
         doc = docx.Document(brief)
         text = docText(doc)
+
         if hasBriefkommando(text) or not hasMDSyntax(text):
             updateProgress(step)
             continue
