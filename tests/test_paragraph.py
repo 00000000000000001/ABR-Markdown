@@ -5,7 +5,7 @@ sys.path.append("../src")
 from docx import Document
 from paragraph import subdivide
 
-def run():
+def test_insertParagraphs():
     document = Document()
     p = document.add_paragraph("")
     p.add_run("")

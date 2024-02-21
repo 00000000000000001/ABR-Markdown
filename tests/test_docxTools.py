@@ -4,7 +4,7 @@ sys.path.append("../src")
 from docxTools import in_which_run_is, at_which_position_in_its_run_is, cp, rm, mv
 from docx import Document
 
-def run():
+def test_docxTools():
     document = Document()
 
     p_src = document.add_paragraph("")

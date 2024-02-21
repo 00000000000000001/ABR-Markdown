@@ -4,7 +4,7 @@ from gui import showMsg
 # Ersetzungsregeln Paragraph (P)
 # I:    (u\n\nv)n|(u)n(v)n+1
 
-def process(pN):
+def pI(pN):
     wasEdited = False
     text = pN.text
     i = text.find("\n\n")
@@ -31,6 +31,6 @@ def subdivide(doc):
         )
 
         p = doc.paragraphs[j]
-        wasEdited |= process(p)
+        wasEdited |= pI(p)
         j += 1
     return wasEdited

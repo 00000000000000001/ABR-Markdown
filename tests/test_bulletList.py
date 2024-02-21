@@ -7,7 +7,7 @@ from docx import Document
 from bulletList import substitute
 
 
-def run():
+def test_replaceDoubleAsterisks():
 
     # I: (** v)
     document = Document()
@@ -251,7 +251,5 @@ def run():
     assert document.paragraphs[2].text == ""
     assert document.paragraphs[3].text == ""
     assert document.paragraphs[4].text == "asd "
-
-    # document.save("./test.docx")
 
     return

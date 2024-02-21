@@ -4,7 +4,6 @@ from gui import showMsg
 
 def removeComments(doc):
     wasEdited = False
-    delete = False
     consume = False
 
     for p in doc.paragraphs:

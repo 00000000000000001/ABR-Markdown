@@ -7,7 +7,7 @@ from docx import Document
 from comments import removeComments
 
 
-def run():
+def test_removeComments():
 
     doc = Document()
     p = doc.add_paragraph("")
@@ -57,11 +57,11 @@ def run():
     assert len(doc.paragraphs) == 1
     assert doc.paragraphs[0].text == ""
 
-    # doc = Document()
-    # p = doc.add_paragraph("{fo{foo}o}")
-    # removeComments(doc)
-    # assert len(doc.paragraphs) == 1
-    # assert doc.paragraphs[0].text == ""
+    doc = Document()
+    p = doc.add_paragraph("{fo{foo}o}")
+    removeComments(doc)
+    assert len(doc.paragraphs) == 1
+    assert doc.paragraphs[0].text == "o}"
 
     doc = Document()
     p = doc.add_paragraph("{foo}bar")

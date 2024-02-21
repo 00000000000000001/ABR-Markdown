@@ -5,7 +5,7 @@ sys.path.append("./src")
 from docx import Document
 import comments, paragraph, bulletList
 
-def run():
+def test_wasEdited():
     doc = Document()
     p_src = doc.add_paragraph("")
     assert comments.removeComments(doc) | paragraph.subdivide(doc) | bulletList.substitute(doc) == False
