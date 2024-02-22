@@ -1,37 +1,12 @@
 import config
 import glob
-import re
-import docx
 import fcntl
 import sys
 import os
-from docxTools import docText
-import comments, paragraph, bulletList
+import docx
 from gui import fenster, updateProgress
 from threading import *
-
-
-def hasBriefkommando(string):
-    return re.search(r"\$\[.+\]\$", string)
-
-
-def hasMDSyntax(string):
-    return (
-        re.search(r"\{.+\}", string)
-        or re.search(r"[\r\n]{2,}", string)
-        or re.search(r"\*\*.*", string)
-    )
-
-
-def convert_file(doc):
-    wasEdited = False
-    try:
-        wasEdited |= comments.removeComments(doc)
-        wasEdited |= paragraph.subdivide(doc)
-        wasEdited |= bulletList.substitute(doc)
-    except:
-        print("Error when converting docx")
-    return wasEdited
+from converterFunktions import checkAndConvert
 
 
 def showMessage(text):
@@ -70,17 +45,9 @@ def work():
     step = 100 / number
 
     for brief in briefe:
-
         doc = docx.Document(brief)
-        text = docText(doc)
-
-        if hasBriefkommando(text) or not hasMDSyntax(text):
-            updateProgress(step)
-            continue
-
-        if convert_file(doc):
+        if checkAndConvert(doc) != None:
             doc.save(brief)
-
         updateProgress(step)
 
     fenster.after(555, lambda: fenster.quit())
