@@ -4,7 +4,7 @@ sys.path.append("../src")
 sys.path.append("./src")
 from docx import Document
 import comments, paragraph, bulletList
-from converterFunktions import checkAndConvert
+from converterFunctions import checkAndConvert
 
 def test_wasEdited():
     doc = Document()

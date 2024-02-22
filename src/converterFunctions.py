@@ -8,7 +8,7 @@ def checkAndConvert(doc):
     if hasBriefkommando(text) or not hasMDSyntax(text):
         return None
 
-    if convert_file(doc):
+    if convertDoc(doc):
         return doc
 
 def hasBriefkommando(string):
@@ -22,7 +22,7 @@ def hasMDSyntax(string):
         or re.search(r"\*\*.*", string)
     )
 
-def convert_file(doc):
+def convertDoc(doc):
     wasEdited = False
     try:
         wasEdited |= comments.removeComments(doc)

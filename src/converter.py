@@ -6,7 +6,7 @@ import os
 import docx
 from gui import fenster, updateProgress
 from threading import *
-from converterFunktions import checkAndConvert
+from converterFunctions import checkAndConvert
 
 
 def showMessage(text):
