@@ -1,9 +1,11 @@
 import re
-from docxTools import docText
+import sys
+from docx_tools import extractOuterDocText
 import comments, paragraph, bulletList
+from traceback import print_exc
 
 def checkAndConvert(doc):
-    text = docText(doc)
+    text = extractOuterDocText(doc)
 
     if hasBriefkommando(text) or not hasMDSyntax(text):
         return None
@@ -30,4 +32,6 @@ def convertDoc(doc):
         wasEdited |= bulletList.substitute(doc)
     except:
         print("Error when converting docx")
+        print_exc()
+
     return wasEdited
