@@ -1,6 +1,4 @@
-import sys
-from docx_tools import removeTextSegment as rm
-from docx_tools import duplicatePara as duplicate
+from docxTools import rm, duplicate
 from gui import showMsg
 
 # Ersetzungsregeln Paragraph (P)
@@ -12,8 +10,8 @@ def pI(pN):
     i = text.find("\n\n")
     if i != -1:
         pN1 = duplicate(pN)
-        rm(pN, i, len(text) - 1)
-        rm(pN1, 0, i + 2 - 1)
+        rm(i, len(text) - 1, pN)
+        rm(0, i + 2 - 1, pN1)
         wasEdited = True
 
     return wasEdited

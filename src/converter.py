@@ -61,7 +61,3 @@ fenster.mainloop()
 # Am Ende den Lock freigeben
 fcntl.flock(lock_file, fcntl.LOCK_UN)
 lock_file.close()
-
-# python3.11 -m nuitka --onefile --standalone --python-flag=no_site --include-package=docx --enable-plugin=tk-inter converter.py
-# python3.11 -m nuitka --standalone --include-package=docx --include-plugin-directory=/opt/homebrew/opt/python-tk@3.12 converter.py
-# python3.11 -m nuitka --onefile --standalone --follow-imports converter.py
