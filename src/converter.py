@@ -36,13 +36,20 @@ def threading():
     t1.start()
 
 
+def saveDivide(dividend, divisor):
+    if divisor == 0:
+        return dividend
+    else:
+        return dividend / divisor
+
+
 def work():
     file_input = config.TOMEDO_CACHE_PROXY
 
     briefe = glob.glob(file_input + "*.docx")
 
     number = len(briefe)
-    step = 100 / number
+    step = saveDivide(100, number)
 
     for brief in briefe:
         doc = docx.Document(brief)
