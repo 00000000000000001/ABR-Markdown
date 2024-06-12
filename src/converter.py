@@ -7,6 +7,7 @@ import docx
 from gui import fenster, updateProgress
 from threading import *
 from converterFunctions import checkAndConvert
+from traceback import print_exc
 
 
 def showMessage(text):
@@ -43,19 +44,31 @@ def saveDivide(dividend, divisor):
         return dividend / divisor
 
 
+def alleBriefeSammeln(file_input):
+    """
+    Microsoft Word speichert temporäre .docx-Dateien mit dem Präfix "~$".
+    Diese Dateien werden von der Konvertierung ausgeschlossen.
+    """
+    briefe = [file for file in glob.glob(file_input + "*.docx") if not os.path.basename(file).startswith("~$")]
+    return briefe
+
+
 def work():
     file_input = config.TOMEDO_CACHE_PROXY
 
-    briefe = glob.glob(file_input + "*.docx")
+    briefe = alleBriefeSammeln(file_input);
 
     number = len(briefe)
     step = saveDivide(100, number)
 
     for brief in briefe:
-        doc = docx.Document(brief)
-        if checkAndConvert(doc) != None:
-            doc.save(brief)
-        updateProgress(step)
+        try:
+            doc = docx.Document(brief)
+            if checkAndConvert(doc) != None:
+                doc.save(brief)
+            updateProgress(step)
+        except:
+            print_exc()
 
     fenster.after(555, lambda: fenster.quit())
 
@@ -68,3 +81,5 @@ fenster.mainloop()
 # Am Ende den Lock freigeben
 fcntl.flock(lock_file, fcntl.LOCK_UN)
 lock_file.close()
+
+# python3.11 -m nuitka --onefile --standalone --python-flag=no_site --include-package=docx --enable-plugin=tk-inter converter.py
